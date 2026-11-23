@@ -1,0 +1,910 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaitulMaal - Kalkulator Zakat Maal & Waris (Standar Kemenag & KHI)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        arabic: ['"Amiri"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-emerald-200 selection:text-emerald-900">
+
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-2.5">
+                <div class="w-9 h-9 rounded-lg bg-emerald-700 text-white flex items-center justify-center shadow-sm">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div>
+                    <span class="font-bold text-lg text-slate-900 tracking-tight block leading-none">BaitulMaal</span>
+                    <span class="text-[11px] font-medium text-emerald-700">Standar Kemenag & KHI</span>
+                </div>
+            </div>
+            <div class="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+                <a href="#kalkulator" class="hover:text-emerald-700 transition">Kalkulator</a>
+                <a href="#edukasi" class="hover:text-emerald-700 transition">Ketentuan KHI & Kemenag</a>
+                <a href="#panduan" class="hover:text-emerald-700 transition">Cara Pakai</a>
+                <a href="#kasus" class="hover:text-emerald-700 transition">Contoh Kasus</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero & Basmalah -->
+    <header class="bg-gradient-to-b from-emerald-50/80 to-slate-50 pt-10 pb-8 px-4 border-b border-slate-200/60">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-semibold mb-6">
+                <i class="fa-solid fa-certificate"></i>
+                <span>Mengacu PMA No. 52/2014 & Kompilasi Hukum Islam (KHI)</span>
+            </div>
+
+            <!-- Perbaikan jarak Basmalah agar harakat tidak bertabrakan -->
+            <div class="mb-8">
+                <p class="font-arabic text-3xl md:text-4xl text-emerald-800 leading-loose mb-4" dir="rtl">
+                    بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+                </p>
+            </div>
+
+            <h1 class="text-2xl md:text-4xl font-bold text-slate-900 tracking-tight mb-3">
+                Kalkulator Zakat Maal & Pembagian Waris
+            </h1>
+            <p class="text-slate-600 text-sm md:text-base max-w-2xl mx-auto">
+                Hitung kewajiban zakat harta dan pembagian harta warisan secara akurat sesuai regulasi Kementerian Agama RI dan Kompilasi Hukum Islam.
+            </p>
+            <p class="text-sm md:text-base text-slate-600 italic max-w-2xl mx-auto">
+                    "Dan dirikanlah shalat, tunaikanlah zakat dan ruku'lah beserta orang-orang yang ruku'." (QS. Al-Baqarah: 43)
+                </p>
+        </div>
+    </header>
+
+    <!-- Main Calculator Section -->
+    <main id="kalkulator" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Global Gold Price Bar -->
+        <div class="bg-white rounded-2xl border border-slate-200 p-4 sm:p-5 mb-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-coins text-lg"></i>
+                </div>
+                <div>
+                    <label for="goldPrice" class="block text-sm font-bold text-slate-800">Harga Emas Murni / Gram (Acuan Nisab)</label>
+                    <p class="text-xs text-slate-500">Nisab 85g = <span id="nisabYearDisplay" class="font-semibold text-emerald-700">Rp 136.000.000</span> / thn atau <span id="nisabMonthDisplay" class="font-semibold text-emerald-700">Rp 11.333.333</span> / bln</p>
+                </div>
+            </div>
+            <div class="w-full sm:w-auto flex items-center gap-2">
+                <div class="relative flex-1 sm:w-52">
+                    <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 font-semibold text-sm">Rp</span>
+                    <input type="number" id="goldPrice" value="1600000" min="100000" step="10000"
+                        class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:ring-2 focus:ring-emerald-600 focus:border-emerald-600 outline-none transition">
+                </div>
+                <button onclick="resetGoldPrice()" title="Reset ke standar Rp 1.600.000" class="px-3 py-2.5 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+                    Reset
+                </button>
+            </div>
+        </div>
+
+        <!-- Mode Switcher Tabs -->
+        <div class="grid grid-cols-2 gap-3 p-1.5 bg-slate-200/70 rounded-2xl max-w-md mx-auto mb-8">
+            <button id="tabZakat" onclick="switchMainTab('zakat')" class="py-2.5 px-4 rounded-xl text-sm font-bold transition bg-white text-emerald-800 shadow-sm flex items-center justify-center gap-2">
+                <i class="fa-solid fa-hand-holding-heart"></i> Zakat Maal
+            </button>
+            <button id="tabWaris" onclick="switchMainTab('waris')" class="py-2.5 px-4 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-users-line"></i> Waris (KHI)
+            </button>
+        </div>
+
+        <!-- ==================== ZAKAT SECTION ==================== -->
+        <section id="sectionZakat" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                <!-- Sub-tabs Zakat -->
+                <div class="flex flex-wrap gap-2 pb-5 mb-6 border-b border-slate-100">
+                    <button onclick="switchZakatType('penghasilan')" id="zTab-penghasilan" class="z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-700 text-white transition">Penghasilan / Profesi</button>
+                    <button onclick="switchZakatType('emas')" id="zTab-emas" class="z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Emas & Perak</button>
+                    <button onclick="switchZakatType('tabungan')" id="zTab-tabungan" class="z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Tabungan / Deposito</button>
+                    <button onclick="switchZakatType('perdagangan')" id="zTab-perdagangan" class="z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">Perdagangan / Usaha</button>
+                </div>
+
+                <!-- Form Penghasilan -->
+                <div id="zForm-penghasilan" class="z-form space-y-4">
+                    <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/70 text-xs text-emerald-900 leading-relaxed">
+                        <strong>Ketentuan Kemenag (PMA No. 52/2014):</strong> Zakat penghasilan ditunaikan saat gaji/pendapatan diterima jika mencapai nisab bulanan (setara 1/12 dari 85 gram emas) dengan kadar 2,5%.
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Periode Perhitungan</label>
+                        <select id="zpPeriode" onchange="calcZakat()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <option value="bulanan">Bulanan (Nisab 85g / 12 bulan)</option>
+                            <option value="tahunan">Tahunan (Nisab 85g emas)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Gaji / Pendapatan Rutin (Rp)</label>
+                        <input type="number" id="zpGaji" oninput="calcZakat()" placeholder="Contoh: 12000000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Pendapatan Lain / Bonus / THR (Rp)</label>
+                        <input type="number" id="zpBonus" oninput="calcZakat()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Pengeluaran Kebutuhan Pokok / Utang Jatuh Tempo (Rp)</label>
+                        <input type="number" id="zpHutang" oninput="calcZakat()" placeholder="0 (Opsional)" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                </div>
+
+                <!-- Form Emas -->
+                <div id="zForm-emas" class="z-form hidden space-y-4">
+                    <div class="p-3.5 rounded-xl bg-amber-50/70 border border-amber-200/70 text-xs text-amber-900 leading-relaxed">
+                        <strong>Ketentuan Kemenag:</strong> Emas simpanan wajib dizakati jika mencapai berat minimal <strong>85 gram</strong> dan telah dimiliki selama <strong>1 tahun hijriah (haul)</strong>.
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Total Berat Emas Simpanan (Gram)</label>
+                        <input type="number" id="zeBerat" oninput="calcZakat()" placeholder="Contoh: 100" step="0.1" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Sudah Mencapai Haul (1 Tahun)?</label>
+                        <select id="zeHaul" onchange="calcZakat()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <option value="ya">Ya, sudah tersimpan 1 tahun</option>
+                            <option value="tidak">Belum mencapai 1 tahun</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Form Tabungan -->
+                <div id="zForm-tabungan" class="z-form hidden space-y-4">
+                    <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/70 text-xs text-emerald-900 leading-relaxed">
+                        <strong>Ketentuan Kemenag:</strong> Saldo tabungan/deposito yang mengendap selama 1 tahun dan mencapai nilai setara 85 gram emas wajib dikeluarkan zakatnya sebesar 2,5%.
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Total Saldo Tabungan / Deposito (Rp)</label>
+                        <input type="number" id="ztSaldo" oninput="calcZakat()" placeholder="Contoh: 150000000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Sudah Mencapai Haul (1 Tahun)?</label>
+                        <select id="ztHaul" onchange="calcZakat()" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <option value="ya">Ya, sudah tersimpan 1 tahun</option>
+                            <option value="tidak">Belum mencapai 1 tahun</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Form Perdagangan -->
+                <div id="zForm-perdagangan" class="z-form hidden space-y-4">
+                    <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-200/70 text-xs text-emerald-900 leading-relaxed">
+                        <strong>Rumus Zakat Perniagaan:</strong> (Modal Diputar + Keuntungan + Piutang Lancar) − (Utang Jatuh Tempo) × 2,5%.
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Nilai Barang Dagangan / Modal Diputar (Rp)</label>
+                        <input type="number" id="zdModal" oninput="calcZakat()" placeholder="Contoh: 120000000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Keuntungan Usaha & Kas Tunai (Rp)</label>
+                        <input type="number" id="zdUntung" oninput="calcZakat()" placeholder="Contoh: 45000000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Piutang Dagang yang Dapat Dicairkan (Rp)</label>
+                        <input type="number" id="zdPiutang" oninput="calcZakat()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Utang Usaha Jatuh Tempo (Rp)</label>
+                        <input type="number" id="zdHutang" oninput="calcZakat()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Card Zakat -->
+            <div class="lg:col-span-5">
+                <div class="bg-emerald-900 text-white rounded-2xl p-6 shadow-md sticky top-24">
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-xs font-semibold uppercase tracking-wider text-emerald-300">Hasil Perhitungan Zakat</span>
+                        <span id="zStatusBadge" class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-800 text-emerald-200">Menunggu Input</span>
+                    </div>
+
+                    <div class="mb-6">
+                        <p class="text-xs text-emerald-200 mb-1">Total Zakat Wajib Dikeluarkan (2,5%)</p>
+                        <p id="zResultTotal" class="text-3xl sm:text-4xl font-bold tracking-tight">Rp 0</p>
+                    </div>
+
+                    <div class="space-y-2.5 pt-4 border-t border-emerald-800 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-emerald-200">Harta Bersih Kena Zakat</span>
+                            <span id="zNetAsset" class="font-semibold">Rp 0</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-emerald-200">Batas Nisab Berlaku</span>
+                            <span id="zNisabApplied" class="font-semibold">Rp 11.333.333</span>
+                        </div>
+                    </div>
+
+                    <div id="zNoteBox" class="mt-5 p-3.5 rounded-xl bg-emerald-950/60 text-xs text-emerald-100 leading-relaxed">
+                        Masukkan nominal harta pada formulir di samping untuk mengetahui status wajib zakat Anda.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== WARIS SECTION (KHI) ==================== -->
+        <section id="sectionWaris" class="hidden grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <div class="lg:col-span-7 space-y-6">
+                <!-- Harta & Kewajiban Pewaris -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">1</span>
+                        Harta Peninggalan & Kewajiban (KHI Pasal 175)
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Total Harta Peninggalan / Tirkah (Rp)</label>
+                            <input type="number" id="wTirkah" oninput="calcWaris()" placeholder="Contoh: 600000000" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold focus:ring-2 focus:ring-emerald-600 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Biaya Perawatan Jenazah (Rp)</label>
+                            <input type="number" id="wTajhiz" oninput="calcWaris()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Pelunasan Utang Pewaris (Rp)</label>
+                            <input type="number" id="wHutang" oninput="calcWaris()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                        </div>
+                        <div class="sm:col-span-2">
+                            <label class="block text-xs font-bold text-slate-700 mb-1.5">Wasiat Pewaris (Maksimal 1/3 Harta Bersih — KHI Pasal 195)</label>
+                            <input type="number" id="wWasiat" oninput="calcWaris()" placeholder="0" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold focus:ring-2 focus:ring-emerald-600 outline-none">
+                            <p id="wWasiatWarning" class="hidden text-xs text-amber-700 mt-1 font-medium"><i class="fa-solid fa-triangle-exclamation"></i> Wasiat melebihi 1/3 harta bersih, otomatis disesuaikan menjadi maksimal 1/3 sesuai KHI.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ahli Waris -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-900 mb-4 flex items-center gap-2">
+                        <span class="w-6 h-6 rounded-full bg-emerald-100 text-emerald-800 text-xs flex items-center justify-center font-bold">2</span>
+                        Daftar Ahli Waris yang Hidup
+                    </h3>
+
+                    <div class="space-y-4">
+                        <!-- Pasangan -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Jenis Kelamin Pewaris</label>
+                                <select id="wGender" onchange="toggleSpouseInput(); calcWaris();" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-semibold">
+                                    <option value="L">Laki-laki (Meninggalkan Istri)</option>
+                                    <option value="P">Perempuan (Meninggalkan Suami)</option>
+                                </select>
+                            </div>
+                            <div id="boxIstri">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Jumlah Istri (0 - 4)</label>
+                                <input type="number" id="wIstri" value="1" min="0" max="4" oninput="calcWaris()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold">
+                            </div>
+                            <div id="boxSuami" class="hidden">
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Suami Hidup?</label>
+                                <select id="wSuami" onchange="calcWaris()" class="w-full px-3 py-2 bg-white border border-slate-300 rounded-lg text-xs font-bold">
+                                    <option value="1">Ya, Suami Hidup</option>
+                                    <option value="0">Tidak Ada</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Orang Tua -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                <input type="checkbox" id="wAyah" onchange="calcWaris()" class="w-4 h-4 text-emerald-700 rounded">
+                                <span class="text-xs font-bold text-slate-700">Ayah Kandung</span>
+                            </label>
+                            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 cursor-pointer hover:bg-slate-50">
+                                <input type="checkbox" id="wIbu" onchange="calcWaris()" class="w-4 h-4 text-emerald-700 rounded">
+                                <span class="text-xs font-bold text-slate-700">Ibu Kandung</span>
+                            </label>
+                        </div>
+
+                        <!-- Anak Kandung -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Anak Laki-laki</label>
+                                <input type="number" id="wAnakLk" value="0" min="0" oninput="calcWaris()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Anak Perempuan</label>
+                                <input type="number" id="wAnakPr" value="0" min="0" oninput="calcWaris()" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold">
+                            </div>
+                        </div>
+
+                        <!-- Ahli Waris Pengganti (KHI Pasal 185) -->
+                        <div class="p-3.5 rounded-xl bg-amber-50/60 border border-amber-200/80">
+                            <p class="text-xs font-bold text-amber-900 mb-2 flex items-center gap-1.5">
+                                <i class="fa-solid fa-user-shield"></i> Ahli Waris Pengganti (KHI Pasal 185)
+                            </p>
+                            <p class="text-[11px] text-amber-800 mb-3">Diisi jika ada anak pewaris yang meninggal lebih dulu dan meninggalkan cucu.</p>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Jalur Anak Lk (Cucu)</label>
+                                    <input type="number" id="wPenggantiLk" value="0" min="0" oninput="calcWaris()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-bold text-slate-700 mb-1">Jalur Anak Pr (Cucu)</label>
+                                    <input type="number" id="wPenggantiPr" value="0" min="0" oninput="calcWaris()" class="w-full px-3 py-1.5 bg-white border border-slate-300 rounded-lg text-xs font-bold">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Saudara (Jika tidak ada anak & ayah) -->
+                        <div class="pt-2 border-t border-slate-100">
+                            <p class="text-xs font-bold text-slate-700 mb-2">Saudara Pewaris (Dihitung jika tidak ada anak & ayah)</p>
+                            <div class="grid grid-cols-3 gap-2.5">
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Sdr Kandung Lk</label>
+                                    <input type="number" id="wSdrLk" value="0" min="0" oninput="calcWaris()" class="w-full px-2.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Sdr Kandung Pr</label>
+                                    <input type="number" id="wSdrPr" value="0" min="0" oninput="calcWaris()" class="w-full px-2.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold">
+                                </div>
+                                <div>
+                                    <label class="block text-[11px] font-semibold text-slate-600 mb-1">Sdr Seibu (Lk/Pr)</label>
+                                    <input type="number" id="wSdrSeibu" value="0" min="0" oninput="calcWaris()" class="w-full px-2.5 py-2 bg-slate-50 border border-slate-300 rounded-lg text-xs font-bold">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Card Waris -->
+            <div class="lg:col-span-5">
+                <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm sticky top-24">
+                    <div class="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-700">Rincian Pembagian KHI</span>
+                            <h3 class="text-lg font-bold text-slate-900">Harta Siap Dibagi</h3>
+                        </div>
+                        <span id="wMethodBadge" class="px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">Normal</span>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-emerald-900 text-white mb-5">
+                        <p class="text-xs text-emerald-200">Netto Harta Waris (Setelah Tajhiz, Utang & Wasiat)</p>
+                        <p id="wNettoDisplay" class="text-2xl sm:text-3xl font-bold mt-0.5">Rp 0</p>
+                    </div>
+
+                    <div id="wResultList" class="space-y-3 text-sm">
+                        <p class="text-xs text-slate-500 text-center py-6">Masukkan nilai harta peninggalan dan pilih ahli waris untuk melihat pembagian.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Edukasi Standar Kemenag & KHI -->
+    <section id="edukasi" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200">
+        <div class="max-w-3xl mb-8">
+            <h2 class="text-2xl font-bold text-slate-900 mb-2">Landasan Hukum (Kemenag & KHI)</h2>
+            <p class="text-sm text-slate-600">Ringkasan ketentuan resmi yang digunakan dalam perhitungan aplikasi ini.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                <h3 class="font-bold text-base text-emerald-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-book-quran"></i> Zakat Maal (PMA No. 52 Tahun 2014)
+                </h3>
+                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 list-disc pl-4">
+                    <li><strong>Nisab Zakat Maal:</strong> Setara dengan <strong>85 gram emas</strong> murni.</li>
+                    <li><strong>Zakat Penghasilan:</strong> Dianalogikan (*qiyas*) dengan zakat emas (nisab 85 gram emas per tahun atau dibagi 12 bulan) dengan kadar <strong>2,5%</strong> dan dikeluarkan saat diterima.</li>
+                    <li><strong>Syarat Haul (1 Tahun):</strong> Berlaku untuk emas simpanan, tabungan/deposito, dan harta perniagaan.</li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-2xl border border-slate-200">
+                <h3 class="font-bold text-base text-emerald-800 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-gavel"></i> Hukum Kewarisan (KHI Pasal 171–214)
+                </h3>
+                <ul class="space-y-2 text-xs sm:text-sm text-slate-600 list-disc pl-4">
+                    <li><strong>Kewajiban Sebelum Bagi Waris (Pasal 175):</strong> Biaya pengurusan jenazah, pelunasan utang pewaris, dan pelaksanaan wasiat maksimal 1/3 harta.</li>
+                    <li><strong>Ahli Waris Pengganti (Pasal 185):</strong> Cucu yang orang tuanya meninggal lebih dulu dapat menggantikan kedudukan orang tuanya dengan bagian maksimal tidak melebihi bagian ahli waris sederajat.</li>
+                    <li><strong>Radd (Pasal 193):</strong> Apabila terdapat sisa harta dan tidak ada ahli waris <em>ashabah</em>, sisa harta dikembalikan secara berimbang kepada ahli waris yang berhak.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Panduan Penggunaan -->
+    <section id="panduan" class="bg-white py-12 border-t border-slate-200">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-2xl font-bold text-slate-900 mb-6">Cara Menggunakan Kalkulator</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="text-xs font-bold text-emerald-700">Langkah 1</span>
+                    <h4 class="font-bold text-sm text-slate-900 mt-1 mb-1">Sesuaikan Harga Emas</h4>
+                    <p class="text-xs text-slate-600">Masukkan harga emas 24 karat per gram hari ini pada panel atas untuk menentukan batas nisab otomatis.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="text-xs font-bold text-emerald-700">Langkah 2</span>
+                    <h4 class="font-bold text-sm text-slate-900 mt-1 mb-1">Pilih Jenis Perhitungan</h4>
+                    <p class="text-xs text-slate-600">Pilih tab <strong>Zakat Maal</strong> (Penghasilan, Emas, Tabungan, Usaha) atau tab <strong>Waris (KHI)</strong>.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="text-xs font-bold text-emerald-700">Langkah 3</span>
+                    <h4 class="font-bold text-sm text-slate-900 mt-1 mb-1">Isi Nominal & Ahli Waris</h4>
+                    <p class="text-xs text-slate-600">Masukkan nilai harta, utang, dan centang/isi jumlah ahli waris yang masih hidup.</p>
+                </div>
+                <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
+                    <span class="text-xs font-bold text-emerald-700">Langkah 4</span>
+                    <h4 class="font-bold text-sm text-slate-900 mt-1 mb-1">Lihat Rincian Otomatis</h4>
+                    <p class="text-xs text-slate-600">Sistem menampilkan status wajib zakat atau rincian bagian per orang secara real-time.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contoh Kasus Interaktif -->
+    <section id="kasus" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-slate-200">
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-slate-900 mb-1">Contoh Kasus & Simulasi Otomatis</h2>
+            <p class="text-sm text-slate-600">Klik tombol <strong>Simulasikan</strong> untuk langsung mengisi angka studi kasus ke dalam kalkulator.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <!-- Kasus 1 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="inline-block px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold mb-2">Kasus Zakat Penghasilan</span>
+                    <h3 class="font-bold text-base text-slate-900 mb-1.5">Karyawan Swasta dengan Gaji & Bonus</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Bapak Ahmad menerima gaji bulanan Rp 13.500.000 dan tunjangan kinerja Rp 2.500.000. Apakah sudah mencapai nisab bulanan Kemenag?</p>
+                </div>
+                <button onclick="loadCase('zakat1')" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-emerald-800 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Simulasikan Kasus Ini
+                </button>
+            </div>
+
+            <!-- Kasus 2 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="inline-block px-2.5 py-1 rounded-md bg-amber-100 text-amber-800 text-[11px] font-bold mb-2">Kasus Zakat Perniagaan</span>
+                    <h3 class="font-bold text-base text-slate-900 mb-1.5">Tutup Buku Tahunan Toko Kelontong</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Stok barang dagangan Rp 140.000.000, kas keuntungan Rp 55.000.000, dan utang supplier jatuh tempo Rp 20.000.000.</p>
+                </div>
+                <button onclick="loadCase('zakat2')" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-emerald-800 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Simulasikan Kasus Ini
+                </button>
+            </div>
+
+            <!-- Kasus 3 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="inline-block px-2.5 py-1 rounded-md bg-blue-100 text-blue-800 text-[11px] font-bold mb-2">Kasus Waris KHI Normal</span>
+                    <h3 class="font-bold text-base text-slate-900 mb-1.5">Suami Wafat Meninggalkan Istri, Ibu & Anak</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Harta bersih Rp 480.000.000. Ahli waris: 1 Istri, Ibu Kandung, 1 Anak Laki-laki, dan 2 Anak Perempuan.</p>
+                </div>
+                <button onclick="loadCase('waris1')" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-emerald-800 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Simulasikan Kasus Ini
+                </button>
+            </div>
+
+            <!-- Kasus 4 -->
+            <div class="bg-white p-5 rounded-2xl border border-slate-200 flex flex-col justify-between">
+                <div>
+                    <span class="inline-block px-2.5 py-1 rounded-md bg-purple-100 text-purple-800 text-[11px] font-bold mb-2">Kasus Ahli Waris Pengganti (Pasal 185)</span>
+                    <h3 class="font-bold text-base text-slate-900 mb-1.5">Pewaris Meninggalkan Anak & Cucu Yatim</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed mb-4">Harta Rp 360.000.000. Ahli waris: 1 Istri, 1 Anak Laki-laki hidup, serta 1 jalur anak laki-laki yang wafat lebih dulu (ahli waris pengganti).</p>
+                </div>
+                <button onclick="loadCase('waris2')" class="w-full py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-emerald-800 text-white text-xs font-bold transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i> Simulasikan Kasus Ini
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center text-xs px-4">
+        <p class="text-slate-300 font-semibold mb-1">BaitulMaal — Kalkulator Zakat Maal & Waris Islam (Standar Kemenag & KHI)</p>
+        <p>Untuk kasus sengketa waris kompleks, disarankan berkonsultasi langsung dengan Kantor Urusan Agama (KUA) atau Pengadilan Agama setempat.</p>
+    </footer>
+
+    <script>
+        let currentZakatType = 'penghasilan';
+
+        const formatRp = (num) => {
+            return 'Rp ' + Math.round(num).toLocaleString('id-ID');
+        };
+
+        // Load saved gold price
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedGold = localStorage.getItem('baitulmaal_gold_price');
+            if (savedGold) {
+                document.getElementById('goldPrice').value = savedGold;
+            }
+            updateNisabDisplay();
+            calcZakat();
+        });
+
+        document.getElementById('goldPrice').addEventListener('input', () => {
+            const val = parseFloat(document.getElementById('goldPrice').value) || 0;
+            localStorage.setItem('baitulmaal_gold_price', val);
+            updateNisabDisplay();
+            calcZakat();
+        });
+
+        function resetGoldPrice() {
+            document.getElementById('goldPrice').value = 1600000;
+            localStorage.setItem('baitulmaal_gold_price', 1600000);
+            updateNisabDisplay();
+            calcZakat();
+        }
+
+        function updateNisabDisplay() {
+            const gold = parseFloat(document.getElementById('goldPrice').value) || 0;
+            const nisabYear = gold * 85;
+            const nisabMonth = nisabYear / 12;
+            document.getElementById('nisabYearDisplay').textContent = formatRp(nisabYear);
+            document.getElementById('nisabMonthDisplay').textContent = formatRp(nisabMonth);
+        }
+
+        function switchMainTab(tab) {
+            const isZakat = tab === 'zakat';
+            document.getElementById('sectionZakat').classList.toggle('hidden', !isZakat);
+            document.getElementById('sectionWaris').classList.toggle('hidden', isZakat);
+
+            document.getElementById('tabZakat').className = isZakat
+                ? 'py-2.5 px-4 rounded-xl text-sm font-bold transition bg-white text-emerald-800 shadow-sm flex items-center justify-center gap-2'
+                : 'py-2.5 px-4 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-2';
+
+            document.getElementById('tabWaris').className = !isZakat
+                ? 'py-2.5 px-4 rounded-xl text-sm font-bold transition bg-white text-emerald-800 shadow-sm flex items-center justify-center gap-2'
+                : 'py-2.5 px-4 rounded-xl text-sm font-bold transition text-slate-600 hover:text-slate-900 flex items-center justify-center gap-2';
+        }
+
+        function switchZakatType(type) {
+            currentZakatType = type;
+            document.querySelectorAll('.z-form').forEach(el => el.classList.add('hidden'));
+            document.getElementById('zForm-' + type).classList.remove('hidden');
+
+            document.querySelectorAll('.z-subtab').forEach(btn => {
+                btn.className = 'z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+            });
+            document.getElementById('zTab-' + type).className = 'z-subtab px-3.5 py-2 rounded-lg text-xs font-bold bg-emerald-700 text-white transition';
+            calcZakat();
+        }
+
+        function calcZakat() {
+            const goldPrice = parseFloat(document.getElementById('goldPrice').value) || 0;
+            const nisabYear = goldPrice * 85;
+            const nisabMonth = nisabYear / 12;
+
+            let netAsset = 0;
+            let appliedNisab = nisabYear;
+            let haulMet = true;
+
+            if (currentZakatType === 'penghasilan') {
+                const periode = document.getElementById('zpPeriode').value;
+                const gaji = parseFloat(document.getElementById('zpGaji').value) || 0;
+                const bonus = parseFloat(document.getElementById('zpBonus').value) || 0;
+                const hutang = parseFloat(document.getElementById('zpHutang').value) || 0;
+                netAsset = Math.max(0, (gaji + bonus) - hutang);
+                appliedNisab = periode === 'bulanan' ? nisabMonth : nisabYear;
+            } else if (currentZakatType === 'emas') {
+                const berat = parseFloat(document.getElementById('zeBerat').value) || 0;
+                haulMet = document.getElementById('zeHaul').value === 'ya';
+                netAsset = berat * goldPrice;
+                appliedNisab = nisabYear;
+            } else if (currentZakatType === 'tabungan') {
+                netAsset = parseFloat(document.getElementById('ztSaldo').value) || 0;
+                haulMet = document.getElementById('ztHaul').value === 'ya';
+                appliedNisab = nisabYear;
+            } else if (currentZakatType === 'perdagangan') {
+                const modal = parseFloat(document.getElementById('zdModal').value) || 0;
+                const untung = parseFloat(document.getElementById('zdUntung').value) || 0;
+                const piutang = parseFloat(document.getElementById('zdPiutang').value) || 0;
+                const hutang = parseFloat(document.getElementById('zdHutang').value) || 0;
+                netAsset = Math.max(0, (modal + untung + piutang) - hutang);
+                appliedNisab = nisabYear;
+            }
+
+            const badge = document.getElementById('zStatusBadge');
+            const totalEl = document.getElementById('zResultTotal');
+            const noteEl = document.getElementById('zNoteBox');
+
+            document.getElementById('zNetAsset').textContent = formatRp(netAsset);
+            document.getElementById('zNisabApplied').textContent = formatRp(appliedNisab);
+
+            if (netAsset === 0) {
+                badge.textContent = 'Menunggu Input';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-800 text-emerald-200';
+                totalEl.textContent = 'Rp 0';
+                noteEl.textContent = 'Masukkan nominal harta untuk menghitung kewajiban zakat.';
+                return;
+            }
+
+            if (!haulMet) {
+                badge.textContent = 'Belum Wajib (Belum Haul)';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-amber-500/20 text-amber-200';
+                totalEl.textContent = 'Rp 0';
+                noteEl.textContent = 'Harta belum tersimpan selama 1 tahun hijriah (haul), sehingga belum wajib zakat maal.';
+            } else if (netAsset >= appliedNisab) {
+                const zakat = netAsset * 0.025;
+                badge.textContent = 'Wajib Zakat';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-emerald-400 text-emerald-950';
+                totalEl.textContent = formatRp(zakat);
+                noteEl.textContent = 'Harta Anda telah mencapai batas nisab Kemenag. Segera tunaikan zakat sebesar 2,5% melalui BAZNAS atau LAZ resmi.';
+            } else {
+                badge.textContent = 'Belum Mencapai Nisab';
+                badge.className = 'px-3 py-1 rounded-full text-xs font-bold bg-slate-700 text-slate-200';
+                totalEl.textContent = 'Rp 0';
+                noteEl.textContent = `Harta bersih belum mencapai batas nisab (${formatRp(appliedNisab)}). Anda tetap dianjurkan berinfak/sedekah.`;
+            }
+        }
+
+        // ==================== LOGIC WARIS (KHI) ====================
+        function toggleSpouseInput() {
+            const gender = document.getElementById('wGender').value;
+            document.getElementById('boxIstri').classList.toggle('hidden', gender !== 'L');
+            document.getElementById('boxSuami').classList.toggle('hidden', gender !== 'P');
+        }
+
+        function calcWaris() {
+            const tirkah = parseFloat(document.getElementById('wTirkah').value) || 0;
+            const tajhiz = parseFloat(document.getElementById('wTajhiz').value) || 0;
+            const hutang = parseFloat(document.getElementById('wHutang').value) || 0;
+            let wasiat = parseFloat(document.getElementById('wWasiat').value) || 0;
+
+            const afterDebt = Math.max(0, tirkah - tajhiz - hutang);
+            const maxWasiat = afterDebt / 3;
+            const warningEl = document.getElementById('wWasiatWarning');
+
+            if (wasiat > maxWasiat && afterDebt > 0) {
+                wasiat = maxWasiat;
+                warningEl.classList.remove('hidden');
+            } else {
+                warningEl.classList.add('hidden');
+            }
+
+            const netto = Math.max(0, afterDebt - wasiat);
+            document.getElementById('wNettoDisplay').textContent = formatRp(netto);
+
+            const listEl = document.getElementById('wResultList');
+            const methodBadge = document.getElementById('wMethodBadge');
+
+            if (netto <= 0) {
+                listEl.innerHTML = '<p class="text-xs text-slate-500 text-center py-6">Masukkan nominal harta peninggalan bersih di atas Rp 0.</p>';
+                return;
+            }
+
+            const gender = document.getElementById('wGender').value;
+            const jmlIstri = gender === 'L' ? (parseInt(document.getElementById('wIstri').value) || 0) : 0;
+            const adaSuami = gender === 'P' ? (parseInt(document.getElementById('wSuami').value) || 0) === 1 : false;
+
+            const adaAyah = document.getElementById('wAyah').checked;
+            const adaIbu = document.getElementById('wIbu').checked;
+
+            const anakLk = parseInt(document.getElementById('wAnakLk').value) || 0;
+            const anakPr = parseInt(document.getElementById('wAnakPr').value) || 0;
+            const penggantiLk = parseInt(document.getElementById('wPenggantiLk').value) || 0;
+            const penggantiPr = parseInt(document.getElementById('wPenggantiPr').value) || 0;
+
+            const effAnakLk = anakLk + penggantiLk;
+            const effAnakPr = anakPr + penggantiPr;
+            const hasDescendant = (effAnakLk + effAnakPr) > 0;
+
+            const sdrLk = parseInt(document.getElementById('wSdrLk').value) || 0;
+            const sdrPr = parseInt(document.getElementById('wSdrPr').value) || 0;
+            const sdrSeibu = parseInt(document.getElementById('wSdrSeibu').value) || 0;
+            const totalSdr = sdrLk + sdrPr + sdrSeibu;
+
+            let heirs = []; // { name, count, shareFrac, isAshabah, weight, note }
+
+            // 1. Pasangan (KHI Pasal 179 & 180)
+            if (adaSuami) {
+                heirs.push({
+                    name: 'Suami',
+                    count: 1,
+                    shareFrac: hasDescendant ? 1/4 : 1/2,
+                    note: hasDescendant ? '1/4 (Ada keturunan)' : '1/2 (Tidak ada keturunan)'
+                });
+            }
+            if (jmlIstri > 0) {
+                heirs.push({
+                    name: jmlIstri > 1 ? `Istri (${jmlIstri} orang)` : 'Istri',
+                    count: jmlIstri,
+                    shareFrac: hasDescendant ? 1/8 : 1/4,
+                    note: hasDescendant ? '1/8 dibagi rata (Ada keturunan)' : '1/4 dibagi rata (Tidak ada keturunan)'
+                });
+            }
+
+            // 2. Ibu (KHI Pasal 178)
+            if (adaIbu) {
+                const ibuSeperenam = hasDescendant || totalSdr >= 2;
+                heirs.push({
+                    name: 'Ibu Kandung',
+                    count: 1,
+                    shareFrac: ibuSeperenam ? 1/6 : 1/3,
+                    note: ibuSeperenam ? '1/6 (Ada keturunan / ≥2 saudara)' : '1/3 (Tidak ada keturunan & <2 saudara)'
+                });
+            }
+
+            // 3. Ayah (KHI Pasal 177)
+            if (adaAyah) {
+                if (effAnakLk > 0) {
+                    heirs.push({ name: 'Ayah Kandung', count: 1, shareFrac: 1/6, note: '1/6 (Ada anak/pengganti laki-laki)' });
+                } else if (effAnakPr > 0) {
+                    heirs.push({ name: 'Ayah Kandung', count: 1, shareFrac: 1/6, isAshabah: true, weight: 1, note: '1/6 + Sisa (Ashabah)' });
+                } else {
+                    heirs.push({ name: 'Ayah Kandung', count: 1, shareFrac: 0, isAshabah: true, weight: 1, note: 'Ashabah (Sisa harta)' });
+                }
+            }
+
+            // 4. Anak & Ahli Waris Pengganti (KHI Pasal 176 & 185)
+            if (effAnakLk > 0) {
+                const totalWeight = (effAnakLk * 2) + effAnakPr;
+                if (anakLk > 0) {
+                    heirs.push({ name: `Anak Laki-laki (${anakLk})`, count: anakLk, shareFrac: 0, isAshabah: true, weight: anakLk * 2, note: 'Ashabah (2 bagian per lk)' });
+                }
+                if (penggantiLk > 0) {
+                    heirs.push({ name: `Ahli Waris Pengganti Jalur Lk (${penggantiLk})`, count: penggantiLk, shareFrac: 0, isAshabah: true, weight: penggantiLk * 2, note: 'Pasal 185 KHI (Jalur Anak Lk)' });
+                }
+                if (anakPr > 0) {
+                    heirs.push({ name: `Anak Perempuan (${anakPr})`, count: anakPr, shareFrac: 0, isAshabah: true, weight: anakPr, note: 'Ashabah bil Ghair (1 bagian per pr)' });
+                }
+                if (penggantiPr > 0) {
+                    heirs.push({ name: `Ahli Waris Pengganti Jalur Pr (${penggantiPr})`, count: penggantiPr, shareFrac: 0, isAshabah: true, weight: penggantiPr, note: 'Pasal 185 KHI (Jalur Anak Pr)' });
+                }
+            } else if (effAnakPr > 0) {
+                const totalPrFrac = effAnakPr === 1 ? 1/2 : 2/3;
+                if (anakPr > 0) {
+                    heirs.push({ name: `Anak Perempuan (${anakPr})`, count: anakPr, shareFrac: totalPrFrac * (anakPr / effAnakPr), note: effAnakPr === 1 ? '1/2 (Tunggal)' : 'Bagian dari 2/3' });
+                }
+                if (penggantiPr > 0) {
+                    heirs.push({ name: `Ahli Waris Pengganti Jalur Pr (${penggantiPr})`, count: penggantiPr, shareFrac: totalPrFrac * (penggantiPr / effAnakPr), note: 'Pasal 185 KHI (Bagian jalur anak pr)' });
+                }
+            }
+
+            // 5. Saudara (Jika tidak ada keturunan & tidak ada ayah — KHI Pasal 181 & 182)
+            if (!hasDescendant && !adaAyah) {
+                if (sdrSeibu > 0) {
+                    heirs.push({
+                        name: `Saudara Seibu (${sdrSeibu})`,
+                        count: sdrSeibu,
+                        shareFrac: sdrSeibu === 1 ? 1/6 : 1/3,
+                        note: sdrSeibu === 1 ? '1/6 (Pasal 181 KHI)' : '1/3 dibagi rata (Pasal 181 KHI)'
+                    });
+                }
+                if (sdrLk > 0) {
+                    heirs.push({ name: `Saudara Kandung Lk (${sdrLk})`, count: sdrLk, shareFrac: 0, isAshabah: true, weight: sdrLk * 2, note: 'Ashabah (Pasal 182 KHI)' });
+                    if (sdrPr > 0) {
+                        heirs.push({ name: `Saudara Kandung Pr (${sdrPr})`, count: sdrPr, shareFrac: 0, isAshabah: true, weight: sdrPr, note: 'Ashabah bersama Sdr Lk' });
+                    }
+                } else if (sdrPr > 0) {
+                    heirs.push({
+                        name: `Saudara Kandung Pr (${sdrPr})`,
+                        count: sdrPr,
+                        shareFrac: sdrPr === 1 ? 1/2 : 2/3,
+                        note: sdrPr === 1 ? '1/2 (Pasal 182 KHI)' : '2/3 dibagi rata (Pasal 182 KHI)'
+                    });
+                }
+            }
+
+            if (heirs.length === 0) {
+                listEl.innerHTML = '<p class="text-xs text-slate-500 text-center py-6">Pilih minimal satu ahli waris yang masih hidup.</p>';
+                return;
+            }
+
+            // Hitung total bagian pasti (Ashabul Furudh)
+            let totalFixedFrac = heirs.reduce((sum, h) => sum + h.shareFrac, 0);
+            let totalAshabahWeight = heirs.reduce((sum, h) => sum + (h.isAshabah ? h.weight : 0), 0);
+
+            methodBadge.textContent = 'Normal';
+            methodBadge.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-800';
+
+            if (totalFixedFrac > 1) {
+                // Kasus 'Aul (KHI Pasal 192)
+                methodBadge.textContent = "'Aul (Penyesuaian Proporsional)";
+                methodBadge.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800';
+                heirs.forEach(h => {
+                    h.finalFrac = h.shareFrac / totalFixedFrac;
+                });
+            } else {
+                const remainder = Math.max(0, 1 - totalFixedFrac);
+                if (totalAshabahWeight > 0) {
+                    heirs.forEach(h => {
+                        const ashabahPart = h.isAshabah ? remainder * (h.weight / totalAshabahWeight) : 0;
+                        h.finalFrac = h.shareFrac + ashabahPart;
+                    });
+                } else if (remainder > 0.0001) {
+                    // Kasus Radd (KHI Pasal 193: sisa dikembalikan berimbang kepada ahli waris yang ada)
+                    methodBadge.textContent = 'Radd (KHI Pasal 193)';
+                    methodBadge.className = 'px-2.5 py-1 rounded-md text-xs font-bold bg-blue-100 text-blue-800';
+                    heirs.forEach(h => {
+                        h.finalFrac = h.shareFrac / totalFixedFrac;
+                    });
+                } else {
+                    heirs.forEach(h => { h.finalFrac = h.shareFrac; });
+                }
+            }
+
+            // Render hasil
+            listEl.innerHTML = heirs.map(h => {
+                const amount = netto * h.finalFrac;
+                const perPerson = amount / h.count;
+                const pct = (h.finalFrac * 100).toFixed(2);
+                return `
+                    <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200/80">
+                        <div class="flex justify-between items-start gap-2 mb-1">
+                            <div>
+                                <p class="font-bold text-slate-900 text-sm">${h.name}</p>
+                                <p class="text-[11px] text-slate-500">${h.note} (${pct}%)</p>
+                            </div>
+                            <p class="font-bold text-emerald-800 text-sm">${formatRp(amount)}</p>
+                        </div>
+                        ${h.count > 1 ? `<p class="text-[11px] font-semibold text-slate-600 pt-1.5 mt-1.5 border-t border-slate-200/70">Per orang: ${formatRp(perPerson)}</p>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // ==================== PRESET CONTOH KASUS ====================
+        function loadCase(caseId) {
+            document.getElementById('kalkulator').scrollIntoView({ behavior: 'smooth' });
+
+            if (caseId === 'zakat1') {
+                switchMainTab('zakat');
+                switchZakatType('penghasilan');
+                document.getElementById('zpPeriode').value = 'bulanan';
+                document.getElementById('zpGaji').value = 13500000;
+                document.getElementById('zpBonus').value = 2500000;
+                document.getElementById('zpHutang').value = 0;
+                calcZakat();
+            } else if (caseId === 'zakat2') {
+                switchMainTab('zakat');
+                switchZakatType('perdagangan');
+                document.getElementById('zdModal').value = 140000000;
+                document.getElementById('zdUntung').value = 55000000;
+                document.getElementById('zdPiutang').value = 0;
+                document.getElementById('zdHutang').value = 20000000;
+                calcZakat();
+            } else if (caseId === 'waris1') {
+                switchMainTab('waris');
+                document.getElementById('wTirkah').value = 480000000;
+                document.getElementById('wTajhiz').value = 0;
+                document.getElementById('wHutang').value = 0;
+                document.getElementById('wWasiat').value = 0;
+                document.getElementById('wGender').value = 'L';
+                toggleSpouseInput();
+                document.getElementById('wIstri').value = 1;
+                document.getElementById('wAyah').checked = false;
+                document.getElementById('wIbu').checked = true;
+                document.getElementById('wAnakLk').value = 1;
+                document.getElementById('wAnakPr').value = 2;
+                document.getElementById('wPenggantiLk').value = 0;
+                document.getElementById('wPenggantiPr').value = 0;
+                document.getElementById('wSdrLk').value = 0;
+                document.getElementById('wSdrPr').value = 0;
+                document.getElementById('wSdrSeibu').value = 0;
+                calcWaris();
+            } else if (caseId === 'waris2') {
+                switchMainTab('waris');
+                document.getElementById('wTirkah').value = 360000000;
+                document.getElementById('wTajhiz').value = 0;
+                document.getElementById('wHutang').value = 0;
+                document.getElementById('wWasiat').value = 0;
+                document.getElementById('wGender').value = 'L';
+                toggleSpouseInput();
+                document.getElementById('wIstri').value = 1;
+                document.getElementById('wAyah').checked = false;
+                document.getElementById('wIbu').checked = false;
+                document.getElementById('wAnakLk').value = 1;
+                document.getElementById('wAnakPr').value = 0;
+                document.getElementById('wPenggantiLk').value = 1;
+                document.getElementById('wPenggantiPr').value = 0;
+                document.getElementById('wSdrLk').value = 0;
+                document.getElementById('wSdrPr').value = 0;
+                document.getElementById('wSdrSeibu').value = 0;
+                calcWaris();
+            }
+        }
+    </script>
+</body>
+</html>
